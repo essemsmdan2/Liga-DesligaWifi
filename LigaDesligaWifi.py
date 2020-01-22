@@ -1,13 +1,13 @@
 from selenium import webdriver
 import time
 import threading
-import pyautogui
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 
 
 keys = {
-    'siteurl': 'http://192.168.1.1/index.cgi',
+    'siteurl': 'http://192.168.1.1/login.cgi',
+    'siteurl2': 'http://192.168.1.1/wlbasic.cgi',
     'admin': 'admin',
     'password': '5d526ae03701'
 
@@ -17,9 +17,7 @@ keys = {
 def order(k, ligaDesliga):
     # tela de login
     ligaDesliga = ligaDesliga
-    driver.maximize_window()
     driver.get(k['siteurl'])
-    time.sleep(1)
     print('pegando login e senha')
     try:
         driver.find_element_by_xpath(
@@ -43,27 +41,32 @@ def order(k, ligaDesliga):
         print('n consegui clicar')
     else:
         print('clicado...')
+    driver.get(k['siteurl2'])
 
-    time.sleep(1)
+# FIM TELA DE LOGIN
+
+
+# CHECK E UNCHECK BUTTON
     print("Clicando no SETUP/WIRELESS SETTINGS/BASIC SETTINGS/ENABLE/APPLY")
-
-    if ligaDesliga == 0:
-        xy = [[55, 202], [83, 246], [528, 251],
-              [461, 340], [515, 402], [1142, 168]]
-
-    else:
-        xy = [[55, 202], [83, 246], [528, 251],
-              [461, 340], [511, 635], [1142, 168]]
+    try:
+        x = driver.find_element_by_name('wlanDisabled')
+        x.click()
+    except:
+        print('não consegui encontrar o botão de check')
 
     try:
-        for count, ele in enumerate(xy):
-            pyautogui.moveTo(xy[count][0], xy[count][1], .15)
-            print(xy[count][0], xy[count][1])
-            print('click!')
-            pyautogui.click()
-
+        driver.find_element_by_xpath('//*[@id="manDdnsApply"]').click()
     except:
-        print('passou com ressalvas')
+        print('n consegui clicar')
+
+    try:
+        time.sleep(1)
+        alert = driver.switch_to_alert()
+    except:
+        print('n consegui achar o alert')
+    else:
+        alert.accept()
+        driver.close()
 
 
 if __name__ == "__main__":
@@ -82,3 +85,19 @@ if __name__ == "__main__":
             input('Aperte Enter pra Ligar')
         else:
             input('Aperte Enter pra Desligar')
+
+ # ESSE CÓDIGO ANTES UTILIZAVA O PYAUTOGUI, HOJE JÁ É SOMENTE SELENIUM
+    # if ligaDesliga == 0:
+    #     xy = [[55, 202], [83, 246], [528, 251],
+    #           [461, 340], [515, 402], [1142, 168]]
+    # else:
+    #     xy = [[55, 202], [83, 246], [528, 251],
+    #           [461, 340], [511, 635], [1142, 168]]
+    # try:
+    #     for count, ele in enumerate(xy):
+    #         pyautogui.moveTo(xy[count][0], xy[count][1], .15)
+    #         print(xy[count][0], xy[count][1])
+    #         print('click!')
+    #         pyautogui.click()
+    # except:
+    #     print('passou com ressalvas')
