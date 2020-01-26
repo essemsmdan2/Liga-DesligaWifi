@@ -14,11 +14,13 @@ keys = {
 }
 
 
-def order(k, ligaDesliga):
-    # tela de login
-    ligaDesliga = ligaDesliga
+def order(k):
+
+    # BUSCANDO DADOS E ENVIANDO PARA TELA DE LOGIN
+    on_off = ''
     driver.get(k['siteurl'])
     print('pegando login e senha')
+
     try:
         driver.find_element_by_xpath(
             '//*[@id="username"]').send_keys(k["admin"])
@@ -43,10 +45,9 @@ def order(k, ligaDesliga):
         print('clicado...')
     driver.get(k['siteurl2'])
 
-# FIM TELA DE LOGIN
 
+# CHECK E UNCHECK INPUT RADIO DO WIFI
 
-# CHECK E UNCHECK BUTTON
     print("Clicando no SETUP/WIRELESS SETTINGS/BASIC SETTINGS/ENABLE/APPLY")
     try:
         x = driver.find_element_by_name('wlanDisabled')
@@ -54,6 +55,18 @@ def order(k, ligaDesliga):
     except:
         print('não consegui encontrar o botão de check')
 
+
+# VERIFICAÇÃO SE O ROTEADOR ESTÁ LIGADO OU DESLIGADO
+    try:
+        driver.find_element_by_xpath(
+            '//*[@id="configwlan"]/table[1]/tbody/tr[1]/td[2]/input')
+    except:
+        on_off = 'Ligar'
+
+    else:
+        on_off = 'Desligar'
+
+# FINALIZAÇÃO DO PROGRAMA CLICANDO NO ALERT OK INFORMANDO AO USUÁRIO
     try:
         driver.find_element_by_xpath('//*[@id="manDdnsApply"]').click()
     except:
@@ -68,36 +81,13 @@ def order(k, ligaDesliga):
         alert.accept()
         driver.close()
 
+    print(f'aperte enter para {on_off}')
+
 
 if __name__ == "__main__":
-    ligaDesliga = 1
+
     while True:
         driver = webdriver.Chrome('chromedriver')
-        if ligaDesliga == 0:
-            ligaDesliga = 1
-        else:
-            ligaDesliga = 0
-        order(keys, ligaDesliga)
+        order(keys)
         # criar uma contagem de minutos
-        print('reiniciando em 2 horas')
-
-        if ligaDesliga == 0:
-            input('Aperte Enter pra Ligar')
-        else:
-            input('Aperte Enter pra Desligar')
-
- # ESSE CÓDIGO ANTES UTILIZAVA O PYAUTOGUI, HOJE JÁ É SOMENTE SELENIUM
-    # if ligaDesliga == 0:
-    #     xy = [[55, 202], [83, 246], [528, 251],
-    #           [461, 340], [515, 402], [1142, 168]]
-    # else:
-    #     xy = [[55, 202], [83, 246], [528, 251],
-    #           [461, 340], [511, 635], [1142, 168]]
-    # try:
-    #     for count, ele in enumerate(xy):
-    #         pyautogui.moveTo(xy[count][0], xy[count][1], .15)
-    #         print(xy[count][0], xy[count][1])
-    #         print('click!')
-    #         pyautogui.click()
-    # except:
-    #     print('passou com ressalvas')
+        input('')
