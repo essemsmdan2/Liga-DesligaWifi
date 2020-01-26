@@ -18,6 +18,7 @@ def order(k):
 
     # BUSCANDO DADOS E ENVIANDO PARA TELA DE LOGIN
     on_off = ''
+
     driver.get(k['siteurl'])
     print('pegando login e senha')
 
@@ -25,7 +26,7 @@ def order(k):
         driver.find_element_by_xpath(
             '//*[@id="username"]').send_keys(k["admin"])
     except:
-        print('não consegui encontrar o login')
+        return print('Erro na página! Tente novamente ou Aperte Enter')
     else:
         print('consegui encontrar o login, indo pra senha')
     try:
@@ -45,26 +46,27 @@ def order(k):
         print('clicado...')
     driver.get(k['siteurl2'])
 
-
-# CHECK E UNCHECK INPUT RADIO DO WIFI
+    # CHECK E UNCHECK INPUT RADIO DO WIFI
 
     print("Clicando no SETUP/WIRELESS SETTINGS/BASIC SETTINGS/ENABLE/APPLY")
     try:
         x = driver.find_element_by_name('wlanDisabled')
         x.click()
     except:
-        print('não consegui encontrar o botão de check')
-
+        print('não consegui encontrar o botão de check da Wifi')
+        return print('Erro na página! Tente novamente ou Aperte Enter')
 
 # VERIFICAÇÃO SE O ROTEADOR ESTÁ LIGADO OU DESLIGADO
     try:
         driver.find_element_by_xpath(
-            '//*[@id="configwlan"]/table[1]/tbody/tr[1]/td[2]/input')
+            '//*[@id="configwlan"]/table[1]/tbody/tr[1]/td[2]/input').click()
     except:
-        on_off = 'Ligar'
+
+        on_off = 'roteador desligado'
 
     else:
-        on_off = 'Desligar'
+
+        on_off = 'Ligado'
 
 # FINALIZAÇÃO DO PROGRAMA CLICANDO NO ALERT OK INFORMANDO AO USUÁRIO
     try:
@@ -80,8 +82,7 @@ def order(k):
     else:
         alert.accept()
         driver.close()
-
-    print(f'aperte enter para {on_off}')
+        print('o roteador esta ' + on_off)
 
 
 if __name__ == "__main__":
@@ -89,5 +90,4 @@ if __name__ == "__main__":
     while True:
         driver = webdriver.Chrome('chromedriver')
         order(keys)
-        # criar uma contagem de minutos
         input('')
